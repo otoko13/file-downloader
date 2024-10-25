@@ -1,6 +1,6 @@
 import { DownloadableFile } from "@/types";
 import classNames from "classnames";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useCallback, useState } from "react";
 import { CheckedState } from "../checkbox/Checkbox";
 import styles from "./fileTable.module.scss";
 import FileTableHeader from "./FileTableHeader";
@@ -44,10 +44,22 @@ const FileTable: FunctionComponent<FileTableProps> = ({ className, files }) => {
     setSelectedFiles(updatedSelection);
   };
 
+  const handleDownloadClicked = useCallback(() => {
+    if (!selectedFiles.length) {
+      return;
+    }
+    const alertSegments = selectedFiles.map(
+      (file) => `${file.path} on device ${file.device}`
+    );
+    const alertText = `Downloading: ${alertSegments.join("\n")}`;
+    alert(alertText);
+  }, [selectedFiles]);
+
   return (
     <table className={classNames(styles["file-table"], className)}>
       <FileTableHeader
         checkedState={getSelectAllCheckedState()}
+        onDownloadClicked={handleDownloadClicked}
         onSelectAllClicked={handleSelectAllClicked}
         selectedFileCount={selectedFiles.length}
       />

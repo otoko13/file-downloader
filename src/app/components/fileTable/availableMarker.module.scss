@@ -6,6 +6,8 @@
   height: 16px;
   border-radius: 100%;
   background-color: theme.$success;
+  display: inline-block;
+  margin-right: 12px;
 
   &.visible {
     opacity: 1;

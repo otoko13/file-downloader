@@ -1,4 +1,11 @@
+@use "/src/app/theme.module.scss";
+
 .file-table {
   width: 100%;
   border-collapse: collapse;
+  border: 1px solid theme.$border;
+
+  tr {
+    border-bottom: 1px solid theme.$border;
+  }
 }

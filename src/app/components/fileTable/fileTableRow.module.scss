@@ -10,4 +10,15 @@
   &.selected {
     background-color: theme.$backgroundHighlight;
   }
+
+  td {
+    padding: 12px 24px;
+
+    .status-cell {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-items: center;
+    }
+  }
 }

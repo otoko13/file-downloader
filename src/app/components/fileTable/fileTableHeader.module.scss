@@ -1,0 +1,40 @@
+@use "/src/app/theme.module.scss";
+
+.file-table-header {
+  th {
+    font-size: 1.15rem;
+    font-weight: normal;
+    padding: 12px 24px;
+    text-align: left;
+
+    .download-button {
+      border: none;
+      background: transparent;
+      color: theme.$foreground;
+      padding: 0;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+
+      .download-icon {
+        margin-right: 8px;
+        font-size: 1.7rem;
+      }
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      .selected-count {
+        margin-left: 24px;
+        margin-right: 48px;
+      }
+    }
+
+    &.status-header {
+      padding-left: 52px;
+    }
+  }
+}

@@ -1,27 +1,43 @@
+import classNames from "classnames";
 import { FunctionComponent } from "react";
 import Checkbox, { CheckedState } from "../checkbox/Checkbox";
+import styles from "./fileTableHeader.module.scss";
 
 interface FileTableHeaderProps {
   checkedState: CheckedState;
   onSelectAllClicked: () => void;
   selectedFileCount: number;
+  onDownloadClicked: () => void;
 }
 
 const FileTableHeader: FunctionComponent<FileTableHeaderProps> = ({
   checkedState,
   onSelectAllClicked,
   selectedFileCount,
+  onDownloadClicked,
 }) => {
   return (
-    <thead>
+    <thead className={styles["file-table-header"]}>
       <tr>
-        <th>
-          <Checkbox checkedState={checkedState} onClick={onSelectAllClicked} />
-        </th>
-        <th>Selected {selectedFileCount}</th>
-        <th colSpan={3}>
-          <i className="bi-download download-icon" />
-          Download Selected
+        <th colSpan={5}>
+          <div className={styles["top-header"]}>
+            <Checkbox
+              checkedState={checkedState}
+              onClick={onSelectAllClicked}
+            />
+            <div className={styles["selected-count"]}>
+              Selected {selectedFileCount}
+            </div>
+            <button
+              className={styles["download-button"]}
+              onClick={onDownloadClicked}
+            >
+              <i
+                className={classNames("bi-download", styles["download-icon"])}
+              />
+              Download Selected
+            </button>
+          </div>
         </th>
       </tr>
       <tr>
@@ -29,7 +45,7 @@ const FileTableHeader: FunctionComponent<FileTableHeaderProps> = ({
         <th>Name</th>
         <th>Device</th>
         <th>Path</th>
-        <th>Status</th>
+        <th className={styles["status-header"]}>Status</th>
       </tr>
     </thead>
   );

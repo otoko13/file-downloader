@@ -13,7 +13,7 @@ const AvailableMarker: FunctionComponent<AvailableMarkerProps> = ({
 }) => (
   <div
     className={classNames(className, styles["available-marker"], {
-      available,
+      [styles.visible]: available,
     })}
   />
 );
