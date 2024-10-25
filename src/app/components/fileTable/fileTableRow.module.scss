@@ -1,0 +1,13 @@
+@use "/src/app/theme.module.scss";
+
+.file-table-row {
+  cursor: pointer;
+
+  &:hover {
+    background-color: theme.$backgroundSecondaryHighlight;
+  }
+
+  &.selected {
+    background-color: theme.$backgroundHighlight;
+  }
+}

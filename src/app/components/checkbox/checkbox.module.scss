@@ -1,0 +1,23 @@
+@use "/src/app/theme.module.scss";
+
+.checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+  border: 1px solid theme.$foreground;
+  background: theme.$background;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.active {
+    border: none;
+    background: theme.$primary;
+  }
+
+  .check-icon {
+    display: block;
+    color: theme.$background;
+    font-size: 18px;
+  }
+}
