@@ -15,9 +15,8 @@ const FileTable: FunctionComponent<FileTableProps> = ({ className, files }) => {
   const [selectedFiles, setSelectedFiles] = useState<DownloadableFile[]>([]);
 
   const handleSelectAllClicked = () => {
-    if (selectedFiles.length === files.length) {
-      setSelectedFiles([]);
-    } else setSelectedFiles(files);
+    const filesToSelect = selectedFiles.length === files.length ? [] : files;
+    setSelectedFiles(filesToSelect);
   };
 
   const getSelectAllCheckedState = (): CheckedState => {

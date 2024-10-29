@@ -41,4 +41,4 @@ pnpm test
 ## To do
 
 - add Jest linting
--
+- thorough accessibility review

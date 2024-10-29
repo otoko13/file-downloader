@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import FileTableRow, { FileTableRowProps } from "./FileTableRow";
+import userEvent from "@testing-library/user-event";
 
 let defaultProps: FileTableRowProps;
 let clickHandler: jest.Mock;
@@ -15,6 +16,7 @@ const renderTableWithRow = (props: FileTableRowProps) =>
   );
 
 beforeEach(() => {
+  clickHandler = jest.fn();
   defaultProps = {
     file: {
       name: "smss.exe",
@@ -83,5 +85,43 @@ describe("available marker", () => {
     });
     expect(screen.queryByText("Available")).not.toBeInTheDocument();
     expect(screen.queryByText("Scheduled")).not.toBeInTheDocument();
+  });
+});
+
+describe("onClick", () => {
+  it("should be called when a row is clicked", async () => {
+    renderTableWithRow(defaultProps);
+    await userEvent.click(screen.getByRole("row"));
+    expect(clickHandler).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("columns", () => {
+  beforeEach(() => {
+    renderTableWithRow(defaultProps);
+  });
+
+  it("should render a checkbox in the first column", () => {
+    expect(screen.getAllByRole("cell")[0]).toContainElement(
+      screen.getByRole("checkbox")
+    );
+  });
+
+  it("should render name in the second column", () => {
+    expect(screen.getAllByRole("cell")[1]).toHaveTextContent("smss.exe");
+  });
+
+  it("should render device in the third column", () => {
+    expect(screen.getAllByRole("cell")[2]).toHaveTextContent("Mario");
+  });
+
+  it("should render path in the fourth column", () => {
+    expect(screen.getAllByRole("cell")[3]).toHaveTextContent(
+      "\\Device\\HarddiskVolume2\\Windows\\System32\\smss.exe"
+    );
+  });
+
+  it("should render status in the fifth column", () => {
+    expect(screen.getAllByRole("cell")[4]).toHaveTextContent("Scheduled");
   });
 });
