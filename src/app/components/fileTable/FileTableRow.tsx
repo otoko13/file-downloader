@@ -1,7 +1,7 @@
 import { FunctionComponent, useMemo } from "react";
 import Checkbox from "../checkbox/Checkbox";
 import { DownloadableFile } from "@/types";
-import AvailableMarker from "./AvailableMarker";
+import AvailableMarker from "../availableMarker/AvailableMarker";
 import styles from "./fileTableRow.module.scss";
 import classNames from "classnames";
 

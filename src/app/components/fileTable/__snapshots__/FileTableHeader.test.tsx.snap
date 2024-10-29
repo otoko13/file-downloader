@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`appearance should match the snapshot 1`] = `
+<div>
+  <table>
+    <thead
+      class="file-table-header"
+    >
+      <tr>
+        <th
+          colspan="5"
+        >
+          <div
+            class="top-header"
+          >
+            <button
+              aria-checked="false"
+              aria-label="Select all"
+              class="checkbox"
+              role="checkbox"
+            />
+            <div
+              class="selected-count"
+            >
+              Selected 
+              0
+            </div>
+            <button
+              class="download-button"
+            >
+              <i
+                class="bi-download download-icon"
+              />
+              Download Selected
+            </button>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th />
+        <th>
+          Name
+        </th>
+        <th>
+          Device
+        </th>
+        <th>
+          Path
+        </th>
+        <th
+          class="status-header"
+        >
+          Status
+        </th>
+      </tr>
+    </thead>
+  </table>
+</div>
+`;

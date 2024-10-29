@@ -3,7 +3,7 @@ import { FunctionComponent } from "react";
 import styles from "./availableMarker.module.scss";
 
 interface AvailableMarkerProps {
-  available: boolean;
+  available?: boolean;
   className?: string;
 }
 
@@ -12,6 +12,9 @@ const AvailableMarker: FunctionComponent<AvailableMarkerProps> = ({
   available,
 }) => (
   <div
+    role="img"
+    aria-label="available"
+    aria-hidden={!available}
     className={classNames(className, styles["available-marker"], {
       [styles.visible]: available,
     })}

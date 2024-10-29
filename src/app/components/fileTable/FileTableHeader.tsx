@@ -3,7 +3,7 @@ import { FunctionComponent } from "react";
 import Checkbox, { CheckedState } from "../checkbox/Checkbox";
 import styles from "./fileTableHeader.module.scss";
 
-interface FileTableHeaderProps {
+export interface FileTableHeaderProps {
   checkedState: CheckedState;
   onSelectAllClicked: () => void;
   selectedFileCount: number;
@@ -22,6 +22,7 @@ const FileTableHeader: FunctionComponent<FileTableHeaderProps> = ({
         <th colSpan={5}>
           <div className={styles["top-header"]}>
             <Checkbox
+              ariaLabel="Select all"
               checkedState={checkedState}
               onClick={onSelectAllClicked}
             />

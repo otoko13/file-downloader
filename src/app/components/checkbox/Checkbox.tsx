@@ -7,12 +7,14 @@ import classNames from "classnames";
 export type CheckedState = "checked" | "partial" | "unchecked";
 
 interface CheckboxProps {
+  ariaLabel?: string;
   className?: string;
   checkedState: CheckedState;
   onClick?: () => void;
 }
 
 const Checkbox: FunctionComponent<CheckboxProps> = ({
+  ariaLabel,
   checkedState,
   className,
   onClick,
@@ -36,7 +38,7 @@ const Checkbox: FunctionComponent<CheckboxProps> = ({
       onClick={onClick}
       role="checkbox"
       aria-checked={getCheckedAriaState()}
-      aria-label="Select"
+      aria-label={ariaLabel ?? "Select"}
     >
       {checkedState === "checked" && (
         <i className={classNames("bi-check2", styles["check-icon"])} />

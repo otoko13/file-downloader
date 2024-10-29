@@ -23,3 +23,22 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## How to run the tests
+
+In your terminal, `cd` into the project folder.
+
+Then run the installation command as follows:
+
+```bash
+npm run test
+# or
+yarn test
+# or
+pnpm test
+```
+
+## To do
+
+- add Jest linting
+-
