@@ -5,7 +5,7 @@ import AvailableMarker from "../availableMarker/AvailableMarker";
 import styles from "./fileTableRow.module.scss";
 import classNames from "classnames";
 
-interface FileTableRowProps {
+export interface FileTableRowProps {
   file: DownloadableFile;
   selected: boolean;
   onClick: () => void;

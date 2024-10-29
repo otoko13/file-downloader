@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`appearance should match the snapshot 1`] = `
+<div>
+  <table>
+    <tbody>
+      <tr
+        class="file-table-row"
+      >
+        <td
+          class="selected"
+        >
+          <button
+            aria-checked="false"
+            aria-label="Select"
+            class="checkbox"
+            role="checkbox"
+          />
+        </td>
+        <td>
+          smss.exe
+        </td>
+        <td>
+          Mario
+        </td>
+        <td>
+          \\Device\\HarddiskVolume2\\Windows\\System32\\smss.exe
+        </td>
+        <td>
+          <div
+            class="status-cell"
+          >
+            <div
+              aria-hidden="true"
+              aria-label="available"
+              class="available-marker"
+              role="img"
+            />
+            Scheduled
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
