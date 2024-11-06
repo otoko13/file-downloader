@@ -10,6 +10,7 @@ interface CheckboxProps {
   ariaLabel?: string;
   className?: string;
   checkedState: CheckedState;
+  disabled?: boolean;
   onClick?: () => void;
 }
 
@@ -17,6 +18,7 @@ const Checkbox: FunctionComponent<CheckboxProps> = ({
   ariaLabel,
   checkedState,
   className,
+  disabled,
   onClick,
 }) => {
   const getCheckedAriaState = () => {
@@ -34,8 +36,10 @@ const Checkbox: FunctionComponent<CheckboxProps> = ({
     <button
       className={classNames(styles.checkbox, className, {
         [styles.active]: checkedState !== "unchecked",
+        [styles.disabled]: disabled,
       })}
-      onClick={onClick}
+      disabled={disabled}
+      onClick={!disabled ? onClick : undefined}
       role="checkbox"
       aria-checked={getCheckedAriaState()}
       aria-label={ariaLabel ?? "Select"}

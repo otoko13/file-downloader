@@ -15,6 +15,12 @@
     background: theme.$primary;
   }
 
+  &.disabled {
+    background: theme.$backgroundSecondaryHighlight;
+    border-color: theme.$disabled;
+    cursor: not-allowed;
+  }
+
   .check-icon {
     display: block;
     color: theme.$background;

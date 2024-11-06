@@ -50,6 +50,13 @@ describe("checked state", () => {
   });
 });
 
+describe("disabling", () => {
+  it("should be disabled if disabled passed in", () => {
+    render(<Checkbox checkedState="unchecked" disabled />);
+    expect(screen.getByRole("checkbox")).toBeDisabled();
+  });
+});
+
 describe("onClick", () => {
   it("should call onClick when clicked", async () => {
     const handler = jest.fn();
@@ -57,5 +64,12 @@ describe("onClick", () => {
     expect(handler).not.toHaveBeenCalled();
     await userEvent.click(screen.getByRole("checkbox"));
     expect(handler).toHaveBeenCalled();
+  });
+
+  it("should not call onClick if disabled", async () => {
+    const handler = jest.fn();
+    render(<Checkbox checkedState="unchecked" onClick={handler} disabled />);
+    await userEvent.click(screen.getByRole("checkbox"));
+    expect(handler).not.toHaveBeenCalled();
   });
 });

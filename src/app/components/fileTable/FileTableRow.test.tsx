@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import FileTableRow, { FileTableRowProps } from "./FileTableRow";
 import userEvent from "@testing-library/user-event";
+import { FileStatus } from "@/types";
 
 let defaultProps: FileTableRowProps;
 let clickHandler: jest.Mock;
@@ -22,7 +23,7 @@ beforeEach(() => {
       name: "smss.exe",
       device: "Mario",
       path: "\\Device\\HarddiskVolume2\\Windows\\System32\\smss.exe",
-      status: "scheduled",
+      status: "available",
     },
     selected: false,
     onClick: clickHandler,
@@ -48,40 +49,47 @@ describe("checkbox state", () => {
     const checkbox = screen.getByRole("checkbox");
     expect(checkbox.getAttribute("aria-checked")).toBe("true");
   });
+
+  it("should disable the checkbox if the file is not available", () => {
+    renderTableWithRow({
+      ...defaultProps,
+      file: { ...defaultProps.file, status: "scheduled" },
+    });
+    expect(screen.getByRole("checkbox")).toBeDisabled();
+  });
 });
 
 describe("available marker", () => {
-  it("should not be shown if the file is not available", () => {
-    renderTableWithRow(defaultProps);
-    expect(screen.getByLabelText("available")).not.toHaveClass("visible");
-  });
-
   it("should be shown if the file is available", () => {
-    renderTableWithRow({
-      ...defaultProps,
-      file: { ...defaultProps.file, status: "available" },
-    });
+    renderTableWithRow(defaultProps);
     expect(screen.getByLabelText("available")).toHaveClass("visible");
   });
 
+  it("should not be shown if the file is not available", () => {
+    renderTableWithRow({
+      ...defaultProps,
+      file: { ...defaultProps.file, status: "scheduled" },
+    });
+    expect(screen.getByLabelText("available")).not.toHaveClass("visible");
+  });
+
   it("should show Scheduled if scheduled", () => {
-    renderTableWithRow(defaultProps);
+    renderTableWithRow({
+      ...defaultProps,
+      file: { ...defaultProps.file, status: "scheduled" },
+    });
     expect(screen.queryByText("Scheduled")).toBeInTheDocument();
   });
 
   it("should show Available if available", () => {
-    renderTableWithRow({
-      ...defaultProps,
-      file: { ...defaultProps.file, status: "available" },
-    });
+    renderTableWithRow(defaultProps);
     expect(screen.queryByText("Available")).toBeInTheDocument();
   });
 
   it("should show nothing if neither scheduled nor available", () => {
     renderTableWithRow({
       ...defaultProps,
-      file: { ...defaultProps.file, status: "" as "available" },
-      // need to do the cast to allow the bad value
+      file: { ...defaultProps.file, status: "" as FileStatus },
     });
     expect(screen.queryByText("Available")).not.toBeInTheDocument();
     expect(screen.queryByText("Scheduled")).not.toBeInTheDocument();
@@ -93,6 +101,15 @@ describe("onClick", () => {
     renderTableWithRow(defaultProps);
     await userEvent.click(screen.getByRole("row"));
     expect(clickHandler).toHaveBeenCalledTimes(1);
+  });
+
+  it("should not fire if the file is not available", async () => {
+    renderTableWithRow({
+      ...defaultProps,
+      file: { ...defaultProps.file, status: "scheduled" },
+    });
+    await userEvent.click(screen.getByRole("row"));
+    expect(clickHandler).not.toHaveBeenCalled();
   });
 });
 
@@ -122,6 +139,6 @@ describe("columns", () => {
   });
 
   it("should render status in the fifth column", () => {
-    expect(screen.getAllByRole("cell")[4]).toHaveTextContent("Scheduled");
+    expect(screen.getAllByRole("cell")[4]).toHaveTextContent("Available");
   });
 });

@@ -19,6 +19,7 @@
 
 # production
 /build
+/repo.bundle
 
 # misc
 .DS_Store

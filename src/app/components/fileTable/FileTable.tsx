@@ -1,6 +1,6 @@
-import { DownloadableFile } from "@/types";
+import { File } from "@/types";
 import classNames from "classnames";
-import { FunctionComponent, useCallback, useState } from "react";
+import { FunctionComponent, useCallback, useMemo, useState } from "react";
 import { CheckedState } from "../checkbox/Checkbox";
 import styles from "./fileTable.module.scss";
 import FileTableHeader from "./FileTableHeader";
@@ -8,19 +8,24 @@ import FileTableRow from "./FileTableRow";
 
 interface FileTableProps {
   className?: string;
-  files: DownloadableFile[];
+  files: File[];
 }
 
 const FileTable: FunctionComponent<FileTableProps> = ({ className, files }) => {
-  const [selectedFiles, setSelectedFiles] = useState<DownloadableFile[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const availableFiles = useMemo(
+    () => files.filter((file) => file.status === "available"),
+    [files]
+  );
 
   const handleSelectAllClicked = () => {
-    const filesToSelect = selectedFiles.length === files.length ? [] : files;
+    const filesToSelect =
+      selectedFiles.length === availableFiles.length ? [] : availableFiles;
     setSelectedFiles(filesToSelect);
   };
 
   const getSelectAllCheckedState = (): CheckedState => {
-    if (selectedFiles.length === files.length) {
+    if (selectedFiles.length === availableFiles.length) {
       return "checked";
     }
     if (selectedFiles.length === 0) {
@@ -29,7 +34,7 @@ const FileTable: FunctionComponent<FileTableProps> = ({ className, files }) => {
     return "partial";
   };
 
-  const handleFileSelectClicked = (file: DownloadableFile) => {
+  const handleFileSelectClicked = (file: File) => {
     const indexInSelected = selectedFiles.findIndex(
       (selectedFile) => selectedFile.path === file.path
     );
@@ -47,9 +52,9 @@ const FileTable: FunctionComponent<FileTableProps> = ({ className, files }) => {
     if (!selectedFiles.length) {
       return;
     }
-    const alertSegments = selectedFiles.map(
-      (file) => `${file.path} on device ${file.device}`
-    );
+    const alertSegments = selectedFiles
+      .filter((file) => file.status === "available")
+      .map((file) => `${file.path} on device ${file.device}`);
     const alertText = `Downloading: ${alertSegments.join("\n")}`;
     alert(alertText);
   }, [selectedFiles]);

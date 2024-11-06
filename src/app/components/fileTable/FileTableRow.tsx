@@ -1,12 +1,12 @@
 import { FunctionComponent, useMemo } from "react";
 import Checkbox from "../checkbox/Checkbox";
-import { DownloadableFile } from "@/types";
+import { File } from "@/types";
 import AvailableMarker from "../availableMarker/AvailableMarker";
 import styles from "./fileTableRow.module.scss";
 import classNames from "classnames";
 
 export interface FileTableRowProps {
-  file: DownloadableFile;
+  file: File;
   selected: boolean;
   onClick: () => void;
 }
@@ -27,15 +27,21 @@ const FileTableRow: FunctionComponent<FileTableRowProps> = ({
     }
   }, [file.status]);
 
+  const downloadable = file.status === "available";
+
   return (
     <tr
       className={classNames(styles["file-table-row"], {
         [styles.selected]: selected,
+        [styles.unselectable]: !downloadable,
       })}
-      onClick={onClick}
+      onClick={downloadable ? onClick : undefined}
     >
       <td className="selected">
-        <Checkbox checkedState={selected ? "checked" : "unchecked"} />
+        <Checkbox
+          checkedState={selected ? "checked" : "unchecked"}
+          disabled={!downloadable}
+        />
       </td>
       <td>{file.name}</td>
       <td>{file.device}</td>

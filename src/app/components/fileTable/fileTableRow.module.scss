@@ -11,6 +11,10 @@
     background-color: theme.$backgroundHighlight;
   }
 
+  &.unselectable {
+    cursor: not-allowed;
+  }
+
   td {
     padding: 12px 24px;
 

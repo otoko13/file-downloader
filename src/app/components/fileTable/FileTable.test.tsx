@@ -3,9 +3,9 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import testFiles from "../../../testData.json";
 import FileTable from "./FileTable";
-import { DownloadableFile } from "@/types";
+import { File } from "@/types";
 
-const files = testFiles as DownloadableFile[];
+const files = testFiles as File[];
 
 const clickSelectAllCheckbox = async () => {
   await userEvent.click(screen.getByLabelText("Select all"));
@@ -14,6 +14,8 @@ const clickSelectAllCheckbox = async () => {
 const clickRowCheckbox = async (row: number) => {
   await userEvent.click(screen.getAllByRole("checkbox")[row]);
 };
+
+const getRowCheckbox = (row: number) => screen.getAllByRole("checkbox")[row];
 
 describe("apperance", () => {
   it("should match the snapshot", () => {
@@ -40,13 +42,13 @@ describe("clicking download", () => {
 
   it("should trigger an alert if files are selected", async () => {
     render(<FileTable files={files} />);
-    await clickRowCheckbox(1);
     await clickRowCheckbox(2);
+    await clickRowCheckbox(3);
     await userEvent.click(
       screen.getByRole("button", { name: "Download Selected" })
     );
     expect(windowAlertMock).toHaveBeenCalledWith(
-      "Downloading: \\Device\\HarddiskVolume2\\Windows\\System32\\smss.exe on device Mario\n\\Device\\HarddiskVolume2\\Windows\\System32\\netsh.exe on device Luigi"
+      "Downloading: \\Device\\HarddiskVolume2\\Windows\\System32\\netsh.exe on device Luigi\n\\Device\\HarddiskVolume1\\Windows\\System32\\uxtheme.dll on device Peach"
     );
   });
 });
@@ -54,31 +56,48 @@ describe("clicking download", () => {
 describe("selecting rows", () => {
   it("should update the selected count indicator", async () => {
     render(<FileTable files={files} />);
-    await clickRowCheckbox(1);
-    expect(screen.getByText("Selected 1")).toBeInTheDocument();
     await clickRowCheckbox(2);
+    expect(screen.getByText("Selected 1")).toBeInTheDocument();
+    await clickRowCheckbox(3);
     expect(screen.getByText("Selected 2")).toBeInTheDocument();
   });
 
-  it("should change the status of the select all checkbox to mixed", async () => {
+  it("should not update the selected count indicator if an unavailable row is clicked", async () => {
+    render(<FileTable files={files} />);
+    await clickRowCheckbox(2);
+    expect(screen.getByText("Selected 1")).toBeInTheDocument();
+    await clickRowCheckbox(1);
+    expect(screen.getByText("Selected 1")).toBeInTheDocument();
+  });
+
+  it("should change the status of the select all checkbox", async () => {
     render(<FileTable files={files} />);
     const selectAllCheckbox = screen.getByLabelText("Select all");
     expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("false");
-    await clickRowCheckbox(1);
     await clickRowCheckbox(2);
     expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("mixed");
     await clickRowCheckbox(3);
+    expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("true");
+  });
+
+  it("should not change the status of the select all checkbox if an unavailble row is clicked", async () => {
+    render(<FileTable files={files} />);
+    const selectAllCheckbox = screen.getByLabelText("Select all");
+    expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("false");
+    await clickRowCheckbox(2);
+    expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("mixed");
+    await clickRowCheckbox(1);
     await clickRowCheckbox(4);
     await clickRowCheckbox(5);
     await clickRowCheckbox(6);
-    expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("true");
+    expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("mixed");
   });
 
   it("should allow deselection", async () => {
     render(<FileTable files={files} />);
-    await clickRowCheckbox(1);
+    await clickRowCheckbox(2);
     expect(screen.getByText("Selected 1")).toBeInTheDocument();
-    await clickRowCheckbox(1);
+    await clickRowCheckbox(2);
     expect(screen.getByText("Selected 0")).toBeInTheDocument();
   });
 });
@@ -90,35 +109,45 @@ describe("select all checkbox", () => {
     expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("false");
   });
 
-  it("should select all if none are checked", async () => {
+  it("should select all available files if none are checked", async () => {
     render(<FileTable files={files} />);
     const selectAllCheckbox = screen.getByLabelText("Select all");
     await clickSelectAllCheckbox();
     expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("true");
+    expect(getRowCheckbox(1)).not.toBeChecked();
+    expect(getRowCheckbox(2)).toBeChecked();
+    expect(getRowCheckbox(3)).toBeChecked();
+    expect(getRowCheckbox(4)).not.toBeChecked();
+    expect(getRowCheckbox(5)).not.toBeChecked();
+    expect(getRowCheckbox(6)).not.toBeChecked();
   });
 
-  it("should select all if none are checked", async () => {
-    render(<FileTable files={files} />);
-    const selectAllCheckbox = screen.getByLabelText("Select all");
-    await clickSelectAllCheckbox();
-    expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("true");
-  });
-
-  it("should select all if some are checked", async () => {
+  it("should select all available files if some are checked", async () => {
     render(<FileTable files={files} />);
     const selectAllCheckbox = screen.getByLabelText("Select all");
     await clickRowCheckbox(3);
-    await clickRowCheckbox(4);
     await clickSelectAllCheckbox();
     expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("true");
+    expect(getRowCheckbox(1)).not.toBeChecked();
+    expect(getRowCheckbox(2)).toBeChecked();
+    expect(getRowCheckbox(3)).toBeChecked();
+    expect(getRowCheckbox(4)).not.toBeChecked();
+    expect(getRowCheckbox(5)).not.toBeChecked();
+    expect(getRowCheckbox(6)).not.toBeChecked();
   });
 
-  it("should deselect all if all are checked", async () => {
+  it("should deselect all if all available files are checked", async () => {
     render(<FileTable files={files} />);
     const selectAllCheckbox = screen.getByLabelText("Select all");
     await clickSelectAllCheckbox();
     expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("true");
     await clickSelectAllCheckbox();
     expect(selectAllCheckbox.getAttribute("aria-checked")).toBe("false");
+    expect(getRowCheckbox(1)).not.toBeChecked();
+    expect(getRowCheckbox(2)).not.toBeChecked();
+    expect(getRowCheckbox(3)).not.toBeChecked();
+    expect(getRowCheckbox(4)).not.toBeChecked();
+    expect(getRowCheckbox(5)).not.toBeChecked();
+    expect(getRowCheckbox(6)).not.toBeChecked();
   });
 });
